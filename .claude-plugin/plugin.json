@@ -1,7 +1,7 @@
 {
   "name": "brainam-shield",
   "displayName": "Shield by brAInam",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Safety habits on autopilot for people who build with Claude Code: a project check on every session, locks against leaking secrets, force push and rm -rf, plus /start (one-time setup: git, tests, CI, backup, rollback, error monitoring) and /ship (tests, review and your own check before anything goes live). Speaks Hinglish, Hindi or English.",
   "author": {
     "name": "Sachin Arora (brAInam)",
