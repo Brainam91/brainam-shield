@@ -86,9 +86,8 @@ function main() {
     context = `Shield by brAInam: all ${report.checks.length} safety checks pass (${report.stack.label}). For every change, follow the CLAUDE.md daily rules and use /brainam-shield:ship to go live.`;
   }
 
-  const langNote = prefs.language
-    ? ` Talk to the student in ${prefs.language === 'hinglish' ? 'Hinglish (Hindi in Roman letters mixed with English)' : prefs.language}.`
-    : ' Talk to the student in the language they write in; if unclear (e.g. just "hi"), use simple Hinglish (Hindi in Roman letters mixed with English). Some clients do not show hook messages, so mention the Shield notice yourself in your first reply, in one short line.';
+  const langNote =
+    ' Always reply in the language the student writes in (Hindi, Hinglish, English or any other), and switch when they switch. Some clients do not show hook messages, so mention the Shield notice yourself in your first reply, in one short line.';
   const out = { hookSpecificOutput: { hookEventName: 'SessionStart', additionalContext: context + langNote } };
   if (userMsg) out.systemMessage = userMsg;
   process.stdout.write(JSON.stringify(out));

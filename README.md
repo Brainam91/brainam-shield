@@ -2,14 +2,14 @@
 
 **Claude Code ke saath banao, bina dar ke.** Shield safety ki aadatein apne aap laga deta hai: plan, tests, code review, CI, backup, rollback, error monitoring aur `.env` ki suraksha. Ye un logon ke liye bana hai jo code padh nahi sakte, par Claude Code se apps bana rahe hain.
 
-*Safety habits on autopilot for people who build with Claude Code. It speaks Hinglish, Hindi or English.*
+*Safety habits on autopilot for people who build with Claude Code. It replies in whatever language you write in.*
 
 ## Shield kya karta hai
 
 | Kab | Kya hota hai |
 |---|---|
 | **Project kholte hi** | 10 safety cheezein chupchaap check karta hai: CLAUDE.md, daily rules, git, `.env` safety, secret leak, tests, CI, GitHub backup, rollback notes, error monitoring. Kuch missing ho to ek line mein batata hai. Khaali folder mein sirf `/brainam-shield:start` chalane ko kehta hai. |
-| **`/brainam-shield:start`** (har project mein ek baar) | Bhasha poochta hai, project ke baare mein 4 simple sawaal poochta hai, stack pehchanta hai, aur jo missing hai wo set karta hai. Har step simple shabdon mein samjhata hai. Jo kaam sirf aap kar sakte ho (GitHub account, Sentry), uske steps deta hai. Aakhir mein ✅ / ⏳ report deta hai. |
+| **`/brainam-shield:start`** (har project mein ek baar) | Aap jis bhasha mein likho (Hindi, Hinglish, English), usi mein jawab deta hai. Project ke baare mein 4 simple sawaal poochta hai, stack pehchanta hai, aur jo missing hai wo set karta hai. Har step simple shabdon mein samjhata hai. Jo kaam sirf aap kar sakte ho (GitHub account, Sentry), uske steps deta hai. Aakhir mein ✅ / ⏳ report deta hai. |
 | **`/brainam-shield:ship`** (har change par) | Tests → code review → "khud try karo" checklist (aap confirm karte ho) → tabhi commit + push. Aakhir mein simple summary: kya live hua, aur gadbad ho to wapas kaise jayein. |
 | **Hamesha (locks)** | `.env`, passwords aur API keys ka commit **block**. `git push --force` **block**. `rm -rf` **block** (sirf `node_modules`, `dist`, `build` jaise folders allowed). Seedha `main` par push karne se pehle **poochta hai** aur `/brainam-shield:ship` suggest karta hai. `git reset --hard` / `git clean -f` se pehle poochta hai. |
 

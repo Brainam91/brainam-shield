@@ -5,7 +5,7 @@ description: Safe go-live for every change (Shield by brAInam). Runs the tests, 
 
 # Shield by brAInam: ship a change safely
 
-The student is usually **non-technical**. Your job is to make sure nothing broken goes live, and to explain every step in their language (read `.claude/shield.json` → `language`; default Hinglish) in plain words.
+The student is usually **non-technical**. Your job is to make sure nothing broken goes live, and to explain every step in the language the student writes in (switch when they switch) in plain words.
 
 Stop at the first step that fails, explain simply what is wrong, offer to fix it, and start again from Step 1 after the fix. Never skip a step to "save time". Never push if the student has not confirmed Step 5.
 

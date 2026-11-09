@@ -7,7 +7,7 @@
 - Kaun use karega: {{WHO}}
 - Kahan live hoga: {{WHERE}}
 - Stack: {{STACK}}
-- Student ki bhasha: {{LANGUAGE}} (Claude hamesha isi bhasha mein, simple shabdon mein samjhaye)
+- Bhasha: student jis bhasha mein likhe (Hindi, Hinglish, English...), Claude usi mein, simple shabdon mein jawab de
 
 ## Roz ke 5 rules (Shield by brAInam)
 1. **Ek baar mein ek chhota change.** Ek kaam poora karo, check karo, phir agla.

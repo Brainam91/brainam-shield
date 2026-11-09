@@ -1,6 +1,6 @@
 ---
 name: start
-description: One-time safety setup for a project (Shield by brAInam). Asks the student's language and a few plain questions, detects the stack (React/Vite, Next.js, Laravel, Django, WordPress, Flutter, Android, no-code), and sets up whatever is missing - git, .gitignore for secrets, CLAUDE.md daily rules, tests, GitHub Actions CI, backup, rollback notes, error monitoring - explaining each step simply. Use when the student runs /brainam-shield:start, starts a new project, or the Shield session check reports missing safety items.
+description: One-time safety setup for a project (Shield by brAInam). Replies in whatever language the student writes in, asks a few plain questions, detects the stack (React/Vite, Next.js, Laravel, Django, WordPress, Flutter, Android, no-code), and sets up whatever is missing - git, .gitignore for secrets, CLAUDE.md daily rules, tests, GitHub Actions CI, backup, rollback notes, error monitoring - explaining each step simply. Use when the student runs /brainam-shield:start, starts a new project, or the Shield session check reports missing safety items.
 ---
 
 # Shield by brAInam: project setup
@@ -29,19 +29,19 @@ It prints JSON: `stack`, `empty` (new folder), `isGit`, and `checks` (each with 
 
 ## Step 2: Language
 
-Use the AskUserQuestion tool: "Aap kis bhasha mein baat karna pasand karenge? / Which language do you prefer?" with options **Hinglish**, **Hindi**, **English**. From now on, speak only in that language.
+Do not ask which language. Always reply in the language the student writes in (Hindi, Hinglish, English or any other), and switch when they switch. A student who writes "mujhe website banani hai" gets Hinglish; one who writes in Devanagari gets Hindi; one who writes in English gets English.
 
-Save the choice so the hooks speak the same language. Create or update `.claude/shield.json`:
+So the Shield hooks' short fixed messages match too, save the language the student is using in `.claude/shield.json` (create or update; keep other keys):
 
 ```json
 { "language": "hinglish" }
 ```
 
-(`hinglish`, `hindi` or `english`.)
+(`hinglish`, `hindi` or `english`; for any other language use `english`.) If the student later switches language, just switch your replies; updating this file is optional.
 
 ## Step 3: Four simple questions
 
-Ask these with AskUserQuestion (you can put up to 4 questions in one call), in the chosen language:
+Ask these with AskUserQuestion (you can put up to 4 questions in one call), in the student's language:
 
 1. **Kya bana rahe ho?** (free text via "Other"; offer examples like "Website / landing page", "App with login", "Online store", "Internal tool")
 2. **Kaun use karega?** Sirf main / Kuch log (team, clients) / Public (koi bhi) / Public + online payment
