@@ -40,7 +40,7 @@ Install ke baad apna project folder kholo aur chalao:
 ## Zaroori cheezein
 
 - **Claude Code** (CLI, desktop app ka Code tab, ya Cowork).
-- **Node.js 18+**. Shield ke checks aur locks Node se chalte hain, isliye ye macOS, Windows aur Linux par ek jaisa kaam karte hain. Node nahi hai to nodejs.org se LTS version install karo.
+- **Node.js** (22 LTS ya naya). Shield ke checks aur locks Node se chalte hain, isliye ye macOS, Windows aur Linux par ek jaisa kaam karte hain (locks ke liye Node 18 bhi chalega, par React/Next.js ke liye 22 chahiye). Node nahi hai to nodejs.org se LTS version install karo.
 - **Git**. Windows par "Git for Windows" install karo.
 
 ## Kaunse stacks

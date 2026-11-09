@@ -11,7 +11,7 @@ Stop at the first step that fails, explain simply what is wrong, offer to fix it
 
 ## Step 1: What changed?
 
-Run `git status --short` and `git diff --stat` (plus `git diff --cached --stat`).
+First run `git add -N .` (marks new files so diffs and the review can see them; it does not save anything). Then `git status --short` and `git diff --stat`.
 - Nothing changed and nothing to push → say so and stop.
 - Summarise the change in 1-3 plain lines ("Contact form mein phone number ka field add hua").
 - More than ~15 files or several unrelated features → gently remind rule 1 (ek baar mein ek chhota change) and ask if they want to ship it anyway or split it. Their choice.
@@ -28,13 +28,13 @@ node "${CLAUDE_PLUGIN_ROOT}/scripts/status.js"
 
 ## Step 3: Run the tests
 
-Use the project's test command (from CLAUDE.md "Commands", or by stack: `npm test`, `php artisan test`, `.venv/bin/pytest` / `pytest`, `flutter test`). Also run the build if there is one (`npm run build --if-present`) because a broken build cannot go live.
+Use the project's test command (from CLAUDE.md "Commands", or by stack: `npm test`, `php artisan test`, `.venv/bin/pytest` / `pytest`, `flutter test`). Also run the build if there is one (`npm run build --if-present`) because a broken build cannot go live; if it fails with "command not found" (e.g. `vite`), run `npm install` first.
 - All pass → "✅ Tests pass (N tests)".
 - Something fails → explain in plain words which feature broke and why (not the stack trace), fix it with the student's OK, re-run. Never delete or weaken a test just to make it pass; if the test itself is outdated, explain and ask.
 
 ## Step 4: Code review
 
-Run the built-in review on the current changes: use the Skill tool with skill `code-review` (it reviews the current diff). If that skill is not available, review the diff yourself for: bugs, broken edge cases (empty input, wrong login, no internet), security (secrets in code, SQL injection, missing auth checks, `DEBUG=True` going live), and anything that deletes data.
+Run the built-in review on the current changes: use the Skill tool with skill `code-review` (it reviews the current git diff of the working folder, so make sure you are in the project folder). If it returns nothing or reviews the wrong folder, or the skill is not available, review the diff yourself for: bugs, broken edge cases (empty input, wrong login, no internet), security (secrets in code, SQL injection, missing auth checks, `DEBUG=True` going live), and anything that deletes data.
 - Explain each important finding in one plain line with its risk ("Agar koi khaali form bheje to app crash ho jayega").
 - Fix the serious ones with the student's OK, then go back to Step 3.
 - Small style notes: mention briefly, do not block.
@@ -57,8 +57,9 @@ Stage the changed files by name (or `git add -A` if the list is clean), then com
 
 ## Step 7: Go live (push)
 
-- No GitHub remote (`git remote` empty) → the change is saved locally only. Give the "GitHub backup" steps from `/brainam-shield:start` and stop here.
+- No GitHub remote (`git remote` empty) → the change is saved on this computer only. Give the "GitHub account + backup repo" steps from the "Student-only steps" section of `${CLAUDE_PLUGIN_ROOT}/skills/start/SKILL.md` and stop here.
 - On a feature branch → push it (`git push -u origin <branch>`). If they use pull requests, give the PR link / steps.
+- Public app with `Error monitoring: TODO` in CLAUDE.md → before pushing, remind the student in one line that live errors will go unnoticed until Sentry is set up (their choice to continue).
 - On `main`/`master` → all checks passed, so record that, then push:
   ```bash
   node "${CLAUDE_PLUGIN_ROOT}/scripts/ship-ok.js"
@@ -66,14 +67,17 @@ Stage the changed files by name (or `git add -A` if the list is clean), then com
   ```
   (`ship-ok.js` tells the Shield lock that this push went through /ship, so it will not ask again. It works for one push within 15 minutes.) If the remote has new commits and the push is rejected, run `git pull --rebase`, re-run tests, then push. Never force push.
 
-If the project deploys automatically from GitHub (Vercel, Netlify, etc.), tell them where to see the deploy and to open the live link once it is green.
+Be honest about what "live" means for their hosting:
+- **Vercel / Netlify connected to GitHub** → the push deploys automatically; tell them where to see the deploy and to open the live link once it is green.
+- **cPanel / Hostinger / own server** → the push only saves to GitHub. Give the deploy step for their host (e.g. cPanel → Git Version Control → Update from Remote → Deploy HEAD Commit) and say it is not live until they do it.
+- **No hosting yet** → say "GitHub par save ho gaya, abhi live nahi hai".
 
 ## Step 8: Plain summary
 
 ```
-🚀 Live ho gaya: <one line what changed>
+🚀 Live ho gaya / 💾 GitHub par save ho gaya / 💻 Sirf is computer par save hua: <one line what changed>  (pick the one that is true)
 ✅ Tests: N pass   ✅ Review: <ok / fixed X>   ✅ Aapne khud check kiya
 🔗 Kahan dekhein: <live URL or "GitHub par save hua">
-↩️ Kuch gadbad lage to Claude ko bolo: "pichhla change wapas lao" (Claude `git revert HEAD` karke, tests chala kar, /brainam-shield:ship se wapas live karega)
+↩️ Kuch gadbad lage to (GitHub/hosting par push hua ho tab) Claude ko bolo: "pichhla change wapas lao" (Claude `git revert HEAD` karke, tests chala kar, /brainam-shield:ship se wapas live karega)
 ```
 Mention anything skipped (e.g. "Is change ka test nahi tha").

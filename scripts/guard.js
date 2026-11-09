@@ -199,6 +199,8 @@ function checkPush(rest, cwd, t) {
     });
   }
   if (!toMain) return null;
+  // No remote yet: the push fails by itself, nothing can go live.
+  if (!(git(cwd, ['remote']) || '').trim()) return null;
   if (shipMarkerValid(cwd)) return null;
   return { decision: 'ask', reason: t.pushMain };
 }

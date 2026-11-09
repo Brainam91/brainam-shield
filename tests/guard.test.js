@@ -44,6 +44,8 @@ check('git push --force-with-lease', 'deny');
 check('git push origin --delete main', 'deny');
 
 // push to main
+check('git push', 'allow', 'no remote yet: nothing can go live');
+sh('git remote add origin https://example.invalid/x.git');
 check('git push', 'ask', 'on main, plain push');
 check('git push -u origin main', 'ask');
 check('git push origin feature', 'allow');

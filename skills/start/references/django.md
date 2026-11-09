@@ -11,7 +11,7 @@ Windows: `py -m venv .venv`. Then use the venv's Python directly so no "activate
 - macOS/Linux: `.venv/bin/python`, `.venv/bin/pip`
 - Windows: `.venv\Scripts\python`, `.venv\Scripts\pip`
 
-Add to `.gitignore` (if missing): `.venv/`, `__pycache__/`, `*.pyc`, `db.sqlite3`, `media/`, `staticfiles/`.
+Add to `.gitignore` (if missing): `.venv/`, `__pycache__/`, `*.pyc`, `db.sqlite3*` (also covers backup copies), `media/`, `staticfiles/`.
 
 ## New project
 
@@ -21,17 +21,27 @@ Add to `.gitignore` (if missing): `.venv/`, `__pycache__/`, `*.pyc`, `db.sqlite3
 ```
 (The trailing `.` creates it in the current folder; works with existing Shield files.) Create a first app if needed: `.venv/bin/python manage.py startapp core`.
 
-## Move the secret key out of settings.py
+## Move the secret key out of settings.py (do this in every Django setup)
 
-Django puts a real `SECRET_KEY` and `DEBUG = True` in `settings.py`. Change to read from the environment:
+Django puts a real `SECRET_KEY` and `DEBUG = True` in `settings.py`, and Django does not read `.env` by itself. Install `python-dotenv` and change the settings:
+```bash
+.venv/bin/pip install python-dotenv
+```
 ```python
 import os
+from dotenv import load_dotenv
+
+load_dotenv(BASE_DIR / '.env')  # put this right after BASE_DIR is defined
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'dev-only-not-secret-change-me')
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'  # safe default: off unless .env says True
+ALLOWED_HOSTS = [h for h in (os.environ.get('ALLOWED_HOSTS') or 'localhost,127.0.0.1').split(',') if h]
 ```
-Add `DJANGO_SECRET_KEY=`, `DEBUG=True`, `ALLOWED_HOSTS=` to `.env.example`. Explain: the real key is set only on the live server.
+Then create `.env` for the student's own computer (it is ignored by git; never print it):
+- `DEBUG=True`
+- `DJANGO_SECRET_KEY=` a fresh random value, generated with `.venv/bin/python -c "import secrets; print(secrets.token_urlsafe(50))"` written straight into the file (do not show it in chat)
+
+and `.env.example` with names only: `DJANGO_SECRET_KEY=`, `DEBUG=False`, `ALLOWED_HOSTS=localhost,127.0.0.1`. Explain: "Asli secret key sirf aapke computer aur live server par rahegi. Live par DEBUG apne aap off rahega."
 
 ## Tests with pytest
 
@@ -46,7 +56,7 @@ python_files = tests.py test_*.py *_tests.py
 ```
 (Use the project's real settings module name.)
 
-First test, e.g. `core/tests/test_pages.py` (create `core/tests/__init__.py`), or `tests/test_smoke.py` if there is no app yet:
+First test in `tests/test_smoke.py` (project level). For an app, write its tests in the app's own `tests.py` that `startapp` created; if you prefer a `tests/` package inside the app, delete that `tests.py` first (both cannot exist):
 ```python
 import pytest
 
@@ -62,7 +72,7 @@ Write `requirements.txt` with what is installed (`.venv/bin/pip freeze > require
 
 ## CI
 
-Copy `templates/ci/django.yml` to `.github/workflows/tests.yml`. Match `python-version` to the student's Python (3.12 is a safe default). If the project uses `pyproject.toml` with Poetry/uv instead of `requirements.txt`, change the install step.
+Copy `templates/ci/django.yml` to `.github/workflows/tests.yml`. Keep `python-version: '3.12'` unless the project needs a newer Python. Do not use a brand-new release (it may not be available on GitHub yet). If the project uses `pyproject.toml` with Poetry/uv instead of `requirements.txt`, change the install step.
 
 ## Commands for CLAUDE.md
 - Run: `.venv/bin/python manage.py runserver` → http://127.0.0.1:8000 (Windows: `.venv\Scripts\python manage.py runserver`)
@@ -79,7 +89,7 @@ import sentry_sdk
 if os.environ.get('SENTRY_DSN'):
     sentry_sdk.init(dsn=os.environ['SENTRY_DSN'])
 ```
-Add `SENTRY_DSN=` to `.env.example`; the student sets the real value on the server. Update `requirements.txt`.
+Add `SENTRY_DSN=` to `.env.example`; the student puts the real value in `.env` and on the server. Update `requirements.txt`.
 
 ## Database backup / rollback hints
 - SQLite: copy `db.sqlite3` before risky changes. Postgres/MySQL: hosting backup or `pg_dump` / `mysqldump`.

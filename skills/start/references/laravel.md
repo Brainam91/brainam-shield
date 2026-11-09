@@ -44,7 +44,22 @@ If the project already uses **Pest** (`pestphp/pest` in composer.json), write th
 
 ## CI
 
-Copy `templates/ci/laravel.yml` to `.github/workflows/tests.yml`. Set `php-version` to the version in `composer.json` → `require.php` (e.g. `^8.2` → `'8.3'` is fine; if `composer.lock` was made on 8.4, use `'8.4'`). The file copies `.env.example` to `.env` inside CI only, so real secrets are never needed.
+Copy `templates/ci/laravel.yml` to `.github/workflows/tests.yml`. Set `php-version` to the PHP the lock file was made with: run `php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;'` and use that (the template's default is `'8.4'`; new Laravel versions need 8.4). If unsure, `composer check-platform-reqs --lock` lists what the locked packages need. Tell the student their hosting (cPanel/Hostinger: "Select PHP Version") must use the same or newer PHP. The file copies `.env.example` to `.env` inside CI only, so real secrets are never needed.
+
+## Existing CLAUDE.md / AGENTS.md
+
+New Laravel apps ship their own `CLAUDE.md` / `AGENTS.md` (Laravel Boost guidelines). Keep them word for word and add the Shield sections at the end. If they say to install extra tools (e.g. Laravel Boost), do not do it during Shield setup; mention it to the student as optional.
+
+## Frontend build
+
+If `package.json` exists, run `npm install` once (Laravel uses Vite for CSS/JS); otherwise `npm run build` fails with `vite: command not found`. Commit the resulting `package-lock.json` so CI can build too.
+
+## Deploying to cPanel / Hostinger
+
+Pushing to GitHub does **not** update a cPanel site by itself. Give the student one of these:
+- **cPanel → Git Version Control** → Create → clone the GitHub repo → after each `/brainam-shield:ship`, click **Update from Remote** and then **Deploy HEAD Commit** (needs a `.cpanel.yml`; offer to write one that copies files and runs `php artisan migrate --force` only after a DB backup).
+- Or Hostinger hPanel → **Git** → connect the repo and enable auto-deploy.
+Always take a database backup before deploying a change with migrations.
 
 ## Commands for CLAUDE.md
 - Run: `php artisan serve` (and `npm run dev` in a second terminal if the project uses Vite)

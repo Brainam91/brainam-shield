@@ -1,0 +1,8 @@
+{
+  "name": "brainam-shield",
+  "private": true,
+  "description": "Tests for the Shield by brAInam Claude Code plugin (the plugin itself needs no npm install).",
+  "scripts": {
+    "test": "node tests/project.test.js && node tests/guard.test.js && node tests/hooks.test.js"
+  }
+}

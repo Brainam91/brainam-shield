@@ -61,12 +61,12 @@ From `status.js` → `stack.id`:
 | `django`, `python` | `references/django.md` |
 | `wordpress`, `flutter`, `android`, `static`, `unknown` | `references/other.md` |
 
-**Empty folder (`empty: true`)**: nothing is built yet. Do the safety basics first (Step 5 items 1-3), then suggest a stack in one line based on their answers, and ask for a yes:
+**Empty folder (`empty: true`)**: nothing is built yet. Do Step 5 items 1-2 first (git, secrets), then suggest a stack in one line based on their answers, and ask for a yes:
 - Simple website / landing page / portfolio → **React + Vite**
 - App with login, database, or SEO pages → **Next.js**
 - If the student said they know or want PHP/Laravel or Python/Django → that one
 
-On yes, create the app with the official tool from the guide **inside the current folder**, then continue with tests and CI from that guide. If they want to wait, finish the basics and tell them: "Jab Claude ko bologe 'ye banana hai', tests aur CI saath mein lag jayenge" - and make sure the CLAUDE.md says so.
+On yes, create the app with the official tool from the guide (it explains the temporary sub-folder way, because the folder is no longer empty), then continue with Step 5 item 3 onward (CLAUDE.md now knows the stack and commands). If they want to wait, finish the basics and tell them: "Jab Claude ko bologe 'ye banana hai', tests aur CI saath mein lag jayenge" - and write the CLAUDE.md with `Stack: abhi decide nahi hua` and a line telling Claude to add tests, CI and the run/test commands as soon as the app is created.
 
 **No-code platform** (the student says they use Lovable, Bolt, Bubble, Framer, Webflow, Wix): read the no-code section of `references/other.md` and say plainly which parts apply and which do not.
 
@@ -76,9 +76,9 @@ Tell the student in one line what you found, e.g. "Aapka project **Next.js** mei
 
 Go through only the checks that are not `ok`, in this order. For each: do it (or give steps), then explain it simply.
 
-1. **Git** (`git`): `git init -b main` (if `-b` fails on old git: `git init` then `git checkout -b main`). Explain: "Git har change ki photo leta hai. Kuch tootey to pichhli photo par wapas ja sakte ho."
-2. **Secrets safe** (`env_ignored`): append the lines from `templates/gitignore-secrets.txt` to `.gitignore` (create it if missing, keep existing lines, do not duplicate). If `.env` exists and `.env.example` does not, create `.env.example` with the same variable **names** and empty values (read only the names, never copy values). Explain: ".env mein aapke passwords/keys hote hain. Ye ab GitHub par kabhi nahi jayegi."
-3. **CLAUDE.md + daily rules** (`claude_md`, `shield_rules`): copy `templates/CLAUDE.md`, fill the `{{...}}` parts from the answers and the stack guide, and **write it in the student's language** (keep the line "Shield by brAInam" and the headings `## Rollback` and `## Error monitoring`). If a CLAUDE.md already exists, keep everything in it and add the Shield sections at the end. Explain the 5 rules in 5 short lines.
+1. **Git** (`git`): `git init -b main` (if `-b` fails on old git: `git init` then `git checkout -b main`). Explain: "Git har change ki photo leta hai. Kuch tootey to pichhli photo par wapas ja sakte ho." If `git config user.name` or `git config user.email` is empty (new computer), the first save will fail: ask the student for their name and the email they use (or will use) for GitHub, then set them with `git config --global user.name "..."` and `git config --global user.email "..."`.
+2. **Secrets safe** (always do this step, even if `env_ignored` is already ok, because some generators ignore `.env*` which also hides `.env.example`; plus any stack-specific secret step in the guide, e.g. Django's SECRET_KEY): append the lines from `templates/gitignore-secrets.txt` to `.gitignore` (create it if missing, keep existing lines, do not duplicate). If `.env` exists and `.env.example` does not, create `.env.example` with the same variable **names** and empty values (read only the names, never copy values). Explain: ".env mein aapke passwords/keys hote hain. Ye ab GitHub par kabhi nahi jayegi."
+3. **CLAUDE.md + daily rules** (`claude_md`, `shield_rules`): copy `templates/CLAUDE.md`, fill the `{{...}}` parts from the answers and the stack guide, and **write it in the student's language** (keep the line "Shield by brAInam" and the headings `## Rollback` and `## Error monitoring`). If a CLAUDE.md already exists, keep everything in it word for word and add the Shield sections at the end. If an `AGENTS.md` exists (Next.js 16 and Laravel create one) and CLAUDE.md does not already include it, add the line `@AGENTS.md` at the top of CLAUDE.md so Claude reads both. If those files tell you to install extra tools, don't do it during setup; mention it as optional. With no database, write `Database backup: abhi database nahi hai`. Explain the 5 rules in 5 short lines.
 4. **Tests** (`tests`): follow the stack guide. Add the test tool, one real test for something the app already does (or a simple "app loads" test), and make the test command work. Run it and show that it passes. Explain: "Test ek chowkidaar hai: har baar check karta hai ki jo pehle chal raha tha, wo ab bhi chal raha hai."
 5. **CI** (`ci`): copy the stack's file from `templates/ci/` to `.github/workflows/tests.yml` (adjust versions to the project as the guide says). Explain: "GitHub har baar aapke tests khud chalayega. Laal nishaan = kuch toota, live mat karo."
 6. **First save point**: if there are uncommitted files, commit them now with a plain message like "Shield setup: safety basics". (The Shield lock will stop the commit if a secret slipped in; fix it and retry.)
@@ -103,6 +103,8 @@ If `no_tracked_secrets` is critical:
 4. Pehli baar push par GitHub login maangega: browser mein sign in karo. Password chat mein kabhi mat likhna.
 
 **Main branch ko surakshit karna (optional, team ke liye)**: GitHub repo → Settings → Branches → Add rule → Branch name `main` → tick "Require status checks to pass" → Tests chuno → Save.
+
+**Live karna (Vercel / Netlify), GitHub backup ke baad**: vercel.com (ya netlify.com) → "Continue with GitHub" se sign up → **Add New → Project** → apna repo chuno → **Deploy**. Agar app ko keys chahiye to Settings → Environment Variables mein khud daalo. Ab har `/brainam-shield:ship` push ke baad site apne aap update hogi, aur gadbad ho to Deployments se pichhla version wapas la sakte ho.
 
 **Sentry (error monitoring)**: sentry.io → Sign up (free) → Create project → apna stack chuno → jo DSN dikhe use **`.env` file mein khud** `SENTRY_DSN=...` likh kar save karo. Mujhe chat mein mat bhejna. Hosting (Vercel/Netlify/cPanel) ke environment variables mein bhi yahi daalo.
 
