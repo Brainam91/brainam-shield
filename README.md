@@ -25,11 +25,11 @@ Plugin ke saath ek CLAUDE.md template bhi aata hai. Usme roz ke 5 rules hain:
 Claude Code mein (terminal ya desktop app):
 
 ```bash
-claude plugin marketplace add brAInam91/brainam-shield
+claude plugin marketplace add Brainam91/brainam-shield
 claude plugin install brainam-shield@brainam
 ```
 
-Ya Claude Code session ke andar: `/plugin marketplace add brAInam91/brainam-shield` aur phir `/plugin install brainam-shield@brainam`.
+Ya Claude Code session ke andar: `/plugin marketplace add Brainam91/brainam-shield` aur phir `/plugin install brainam-shield@brainam`.
 
 Install ke baad apna project folder kholo aur chalao:
 
