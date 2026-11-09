@@ -1,0 +1,15 @@
+{
+  "name": "brainam",
+  "description": "Claude Code plugins by brAInam for people learning to build with AI",
+  "owner": {
+    "name": "Sachin Arora (brAInam)",
+    "url": "https://github.com/brAInam91"
+  },
+  "plugins": [
+    {
+      "name": "brainam-shield",
+      "source": "./",
+      "description": "Safety habits on autopilot: project check, secret and force-push locks, /start setup and /ship go-live checks."
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+# Shield by brAInam: har push aur pull request par Laravel tests chalata hai.
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo_sqlite, sqlite3
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist --no-progress
+      - run: cp .env.example .env
+      - run: php artisan key:generate
+      - name: Build frontend (if any)
+        run: |
+          if [ -f package-lock.json ]; then npm ci && npm run build; fi
+      - run: php artisan test
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ':memory:'
